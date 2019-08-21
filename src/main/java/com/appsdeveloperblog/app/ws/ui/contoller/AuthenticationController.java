@@ -13,6 +13,7 @@ import com.appsdeveloperblog.app.ws.ui.model.request.LoginRequestModel;
 
 @RestController
 public class AuthenticationController {
+        
 
 	@ApiOperation("User login")
     @ApiResponses(value = {

@@ -1,3 +1,4 @@
+
 package com.appsdeveloperblog.app.ws;
 
 import org.springframework.context.annotation.Configuration;

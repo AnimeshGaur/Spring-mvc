@@ -8,12 +8,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
-@Entity(name = "password_reset_tokens")
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+@Entity(name = "PASSWORD_RESET_TOKENS")
 public class PasswordResetTokenEntity implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 8051324316462829780L;
 
 	@Id
@@ -25,29 +27,5 @@ public class PasswordResetTokenEntity implements Serializable {
 	@OneToOne()
 	@JoinColumn(name = "users_id")
 	private UserEntity userDetails;
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
-	}
-
-	public UserEntity getUserDetails() {
-		return userDetails;
-	}
-
-	public void setUserDetails(UserEntity userDetails) {
-		this.userDetails = userDetails;
-	}
 
 }

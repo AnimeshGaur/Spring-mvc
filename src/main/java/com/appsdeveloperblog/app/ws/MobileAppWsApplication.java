@@ -17,31 +17,29 @@ public class MobileAppWsApplication extends SpringBootServletInitializer {
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(MobileAppWsApplication.class);
 	}
-	
+
 	public static void main(String[] args) {
 		SpringApplication.run(MobileAppWsApplication.class, args);
 	}
-	
+
 	@Bean
 	public BCryptPasswordEncoder bCryptPasswordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
+
 	@Bean
 	public AmazonSES getAmazonSES() {
 		return new AmazonSES();
 	}
- 
-	@Bean 
-	public SpringApplicationContext springApplicationContext()
-	{
+
+	@Bean
+	public SpringApplicationContext springApplicationContext() {
 		return new SpringApplicationContext();
 	}
-	
-	@Bean(name="AppProperties")
-	public AppProperties getAppProperties()
-	{
+
+	@Bean(name = "AppProperties")
+	public AppProperties getAppProperties() {
 		return new AppProperties();
 	}
-	
+
 }

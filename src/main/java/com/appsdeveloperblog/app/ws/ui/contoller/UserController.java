@@ -53,12 +53,10 @@ public class UserController {
 
 	@Autowired
 	AddressService addressesService;
-	
-	@ApiOperation(value="The Get User Details Web Service Endpoint",
-			notes="${userController.GetUser.ApiOperation.Notes}")
-	@ApiImplicitParams({
-		@ApiImplicitParam(name="authorization", value="${userController.authorizationHeader.description}", paramType="header")
-	})
+
+	@ApiOperation(value = "The Get User Details Web Service Endpoint", notes = "${userController.GetUser.ApiOperation.Notes}")
+//	@ApiImplicitParams({
+//			@ApiImplicitParam(name = "authorization", value = "${userController.authorizationHeader.description}", paramType = "header") })
 	@GetMapping(path = "/{id}", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
 	public UserRest getUser(@PathVariable String id) {
 		UserRest returnValue = new UserRest();
@@ -89,9 +87,6 @@ public class UserController {
 	@PutMapping(path = "/{id}", consumes = { MediaType.APPLICATION_XML_VALUE,
 			MediaType.APPLICATION_JSON_VALUE }, produces = { MediaType.APPLICATION_XML_VALUE,
 					MediaType.APPLICATION_JSON_VALUE })
-	@ApiImplicitParams({
-		@ApiImplicitParam(name="authorization", value="${userController.authorizationHeader.description}", paramType="header")
-	})
 	public UserRest updateUser(@PathVariable String id, @RequestBody UserDetailsRequestModel userDetails) {
 		UserRest returnValue = new UserRest();
 
@@ -105,9 +100,6 @@ public class UserController {
 	}
 
 	@DeleteMapping(path = "/{id}", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
-	@ApiImplicitParams({
-		@ApiImplicitParam(name="authorization", value="${userController.authorizationHeader.description}", paramType="header")
-	})
 	public OperationStatusModel deleteUser(@PathVariable String id) {
 		OperationStatusModel returnValue = new OperationStatusModel();
 		returnValue.setOperationName(RequestOperationName.DELETE.name());
@@ -118,33 +110,26 @@ public class UserController {
 		return returnValue;
 	}
 
-	@ApiImplicitParams({
-		@ApiImplicitParam(name="authorization", value="${userController.authorizationHeader.description}", paramType="header")
-	})
 	@GetMapping(produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
 	public List<UserRest> getUsers(@RequestParam(value = "page", defaultValue = "0") int page,
 			@RequestParam(value = "limit", defaultValue = "2") int limit) {
 		List<UserRest> returnValue = new ArrayList<>();
 
 		List<UserDto> users = userService.getUsers(page, limit);
-		
+
 		Type listType = new TypeToken<List<UserRest>>() {
 		}.getType();
 		returnValue = new ModelMapper().map(users, listType);
 
-		/*for (UserDto userDto : users) {
-			UserRest userModel = new UserRest();
-			BeanUtils.copyProperties(userDto, userModel);
-			returnValue.add(userModel);
-		}*/
+		/*
+		 * for (UserDto userDto : users) { UserRest userModel = new UserRest();
+		 * BeanUtils.copyProperties(userDto, userModel); returnValue.add(userModel); }
+		 */
 
 		return returnValue;
 	}
 
 	// http://localhost:8080/mobile-app-ws/users/jfhdjeufhdhdj/addressses
-	@ApiImplicitParams({
-		@ApiImplicitParam(name="authorization", value="${userController.authorizationHeader.description}", paramType="header")
-	})
 	@GetMapping(path = "/{id}/addresses", produces = { MediaType.APPLICATION_XML_VALUE,
 			MediaType.APPLICATION_JSON_VALUE, "application/hal+json" })
 	public Resources<AddressesRest> getUserAddresses(@PathVariable String id) {
@@ -170,9 +155,6 @@ public class UserController {
 		return new Resources<>(addressesListRestModel);
 	}
 
-	@ApiImplicitParams({
-		@ApiImplicitParam(name="authorization", value="${userController.authorizationHeader.description}", paramType="header")
-	})
 	@GetMapping(path = "/{userId}/addresses/{addressId}", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE, "application/hal+json" })
 	public Resource<AddressesRest> getUserAddress(@PathVariable String userId, @PathVariable String addressId) {
@@ -192,73 +174,65 @@ public class UserController {
 
 		return new Resource<>(addressesRestModel);
 	}
-	
-	 /*
-     * http://localhost:8080/mobile-app-ws/users/email-verification?token=sdfsdf
-     * */
-    @GetMapping(path = "/email-verification", produces = { MediaType.APPLICATION_JSON_VALUE,
-            MediaType.APPLICATION_XML_VALUE })
-    public OperationStatusModel verifyEmailToken(@RequestParam(value = "token") String token) {
 
-        OperationStatusModel returnValue = new OperationStatusModel();
-        returnValue.setOperationName(RequestOperationName.VERIFY_EMAIL.name());
-        
-        boolean isVerified = userService.verifyEmailToken(token);
-        
-        if(isVerified)
-        {
-            returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
-        } else {
-            returnValue.setOperationResult(RequestOperationStatus.ERROR.name());
-        }
+	/*
+	 * http://localhost:8080/mobile-app-ws/users/email-verification?token=sdfsdf
+	 */
+	@GetMapping(path = "/email-verification", produces = { MediaType.APPLICATION_JSON_VALUE,
+			MediaType.APPLICATION_XML_VALUE })
+	public OperationStatusModel verifyEmailToken(@RequestParam(value = "token") String token) {
 
-        return returnValue;
-    }
-    
-	 /*
-     * http://localhost:8080/mobile-app-ws/users/password-reset-request
-     * */
-    @PostMapping(path = "/password-reset-request", 
-            produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE},
-            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
-    )
-    public OperationStatusModel requestReset(@RequestBody PasswordResetRequestModel passwordResetRequestModel) {
-    	OperationStatusModel returnValue = new OperationStatusModel();
- 
-        boolean operationResult = userService.requestPasswordReset(passwordResetRequestModel.getEmail());
-        
-        returnValue.setOperationName(RequestOperationName.REQUEST_PASSWORD_RESET.name());
-        returnValue.setOperationResult(RequestOperationStatus.ERROR.name());
- 
-        if(operationResult)
-        {
-            returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
-        }
+		OperationStatusModel returnValue = new OperationStatusModel();
+		returnValue.setOperationName(RequestOperationName.VERIFY_EMAIL.name());
 
-        return returnValue;
-    }
-    
-    
-    
-    @PostMapping(path = "/password-reset",
-            consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}
-    )
-    public OperationStatusModel resetPassword(@RequestBody PasswordResetModel passwordResetModel) {
-    	OperationStatusModel returnValue = new OperationStatusModel();
- 
-        boolean operationResult = userService.resetPassword(
-                passwordResetModel.getToken(),
-                passwordResetModel.getPassword());
-        
-        returnValue.setOperationName(RequestOperationName.PASSWORD_RESET.name());
-        returnValue.setOperationResult(RequestOperationStatus.ERROR.name());
- 
-        if(operationResult)
-        {
-            returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
-        }
+		boolean isVerified = userService.verifyEmailToken(token);
 
-        return returnValue;
-    }
+		if (isVerified) {
+			returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
+		} else {
+			returnValue.setOperationResult(RequestOperationStatus.ERROR.name());
+		}
+
+		return returnValue;
+	}
+
+	/*
+	 * http://localhost:8080/mobile-app-ws/users/password-reset-request
+	 */
+	@PostMapping(path = "/password-reset-request", produces = { MediaType.APPLICATION_JSON_VALUE,
+			MediaType.APPLICATION_XML_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE,
+					MediaType.APPLICATION_XML_VALUE })
+	public OperationStatusModel requestReset(@RequestBody PasswordResetRequestModel passwordResetRequestModel) {
+		OperationStatusModel returnValue = new OperationStatusModel();
+
+		boolean operationResult = userService.requestPasswordReset(passwordResetRequestModel.getEmail());
+
+		returnValue.setOperationName(RequestOperationName.REQUEST_PASSWORD_RESET.name());
+		returnValue.setOperationResult(RequestOperationStatus.ERROR.name());
+
+		if (operationResult) {
+			returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
+		}
+
+		return returnValue;
+	}
+
+	@PostMapping(path = "/password-reset", consumes = { MediaType.APPLICATION_JSON_VALUE,
+			MediaType.APPLICATION_XML_VALUE })
+	public OperationStatusModel resetPassword(@RequestBody PasswordResetModel passwordResetModel) {
+		OperationStatusModel returnValue = new OperationStatusModel();
+
+		boolean operationResult = userService.resetPassword(passwordResetModel.getToken(),
+				passwordResetModel.getPassword());
+
+		returnValue.setOperationName(RequestOperationName.PASSWORD_RESET.name());
+		returnValue.setOperationResult(RequestOperationStatus.ERROR.name());
+
+		if (operationResult) {
+			returnValue.setOperationResult(RequestOperationStatus.SUCCESS.name());
+		}
+
+		return returnValue;
+	}
 
 }

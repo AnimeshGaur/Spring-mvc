@@ -1,13 +1,11 @@
 package com.appsdeveloperblog.app.ws.ui.model.request;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class PasswordResetRequestModel {
 	private String email;
 
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
+	
 }

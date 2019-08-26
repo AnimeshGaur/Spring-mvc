@@ -22,9 +22,9 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfig {
 
     Contact contact = new Contact(
-            "Sergey Kargopolov",
-            "http://www.appsdeveloperblog.com", 
-            "developer@appsdeveloperblog.com"
+            "Animesh",
+            "http://animeshgaur@github.io", 
+            "ani8222@gmail.com"
     );
     
     List<VendorExtension> vendorExtensions = new ArrayList<>();
